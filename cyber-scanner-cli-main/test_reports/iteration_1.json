@@ -1,0 +1,40 @@
+{
+  "summary": "Executed 20 backend integration tests for VulnScan AI covering auth (register/login/me/JWT protection), scan lifecycle (upload ZIP -> queued -> scanning -> completed, ~30s), user isolation, real findings from Semgrep+Bandit+Gitleaks+IaC+SCA (verified Kubernetes privileged/docker.sock CRITICAL, pyyaml CVE, sorted-by-severity), Claude Sonnet 4.5 AI analysis endpoint, sandboxed bash terminal (ls/pwd inside workspace, blocks shutdown/mkfs), PDF+Markdown report generation, and DELETE cleanup. 20/20 tests PASSED against the public preview URL.",
+  "backend_issues": {
+    "critical": [],
+    "minor": [
+      {"endpoint": "/api/scans", "issue": "Scan job runs via asyncio.create_task inside the FastAPI event loop (blocking IO like reportlab/semgrep run in-process). Under load or worker restart mid-scan the job is silently lost with no retry / no persistent queue. Consider background worker (RQ / Celery / arq) or at least a startup recovery for 'scanning' scans."},
+      {"endpoint": "/api/stats", "issue": "'vulnerabilities_indexed' is a GLOBAL count across ALL users (see server.py:397 comment 'global count for demo'). Leaks tenant data volume; should be scoped to user_id."},
+      {"endpoint": "/api/scans/{id}/report.*", "issue": "PDF/MD generated synchronously on each request. For large scans this ties up the event loop; consider running build_pdf in a threadpool via run_in_executor."}
+    ]
+  },
+  "frontend_issues": {"ui_bugs": [], "integration_issues": [], "design_issues": []},
+  "test_report_links": [
+    "/app/backend/tests/test_vulnscan_backend.py",
+    "/app/test_reports/pytest/pytest_results.xml"
+  ],
+  "action_items": [
+    "No functional bugs found. Suite is green.",
+    "IMPORTANT for future test agents: this suite MUST run serially. pytest.ini pins '-n 2 --dist loadscope' which splits classes to different xdist workers; because TestScanLifecycle stores scan_id as a class attribute shared with TestTerminal/TestReports/TestDelete, parallel workers make later classes fail with 404. Run with 'python -m pytest backend/tests/test_vulnscan_backend.py -n 0'. Alternatively refactor tests to use a session fixture returning scan_id (recommended).",
+    "Consider scoping /api/stats vulnerabilities_indexed to the caller instead of a global count.",
+    "Consider a durable job queue for scans so an in-flight scan survives backend restarts."
+  ],
+  "critical_code_review_comments": [
+    "server.py: scan pipeline is entirely in the API process (asyncio.create_task) — no persistence for interrupted scans, status stays 'scanning' forever if backend restarts.",
+    "server.py:397 exposes global vulnerabilities_indexed count across tenants — potential data leak, marked 'for demo'.",
+    "scanners.py: semgrep --config auto requires network to fetch the registry; if blocked, silently returns zero semgrep findings (still logged as 'completed'). Backend should surface this in scanner_log so users know rules were unavailable.",
+    "server.py:87 _vuln_public excludes _id but list_scans / get_vulns already project it out — minor duplication.",
+    "reports.py PDF build is synchronous CPU work in the async handler; wrap with asyncio.to_thread for larger reports.",
+    "auth.py: JWT_SECRET is read at import time via os.environ['JWT_SECRET']; if missing the module fails to import (fail-fast is fine, but should be documented). No refresh-token flow — 7-day access token is long-lived."
+  ],
+  "updated_files": [
+    "/app/backend/tests/__init__.py (new)",
+    "/app/backend/tests/test_vulnscan_backend.py (new)"
+  ],
+  "success_rate": {"backend": "100%", "frontend": "N/A (backend-only run)"},
+  "test_credentials": "demo@vulnscan.ai / Demo1234! (verified working). Extra users are generated with test_<uuid>@vulnscan.ai / Passw0rd! during the run.",
+  "seed_data_creation": "Test creates a synthetic vulnerable ZIP in-memory (app.py with subprocess/hardcoded AWS keys + path traversal, requirements.txt with pyyaml==3.13/flask==2.0.0/requests==2.25.0, k8s/pod.yaml with privileged:true+docker.sock+hostPath, .env with API_KEY) and uploads it as project 'TEST_vuln_project'. Scan+workspace are deleted at the end of the run via DELETE /api/scans/{id}.",
+  "retest_needed": false,
+  "should_main_agent_self_test": false,
+  "context_for_next_testing_agent": "Suite lives at /app/backend/tests/test_vulnscan_backend.py. RUN COMMAND: `python -m pytest backend/tests/test_vulnscan_backend.py -n 0 -v` from /app (the -n 0 is mandatory because tests share scan_id across classes and pytest.ini forces xdist loadscope). Full run ~75s (30-40s of it is waiting for the actual scan to finish). If you add more classes that depend on scan_id, either keep -n 0 or refactor to a session-scoped fixture that creates the scan once and yields the id."
+}
