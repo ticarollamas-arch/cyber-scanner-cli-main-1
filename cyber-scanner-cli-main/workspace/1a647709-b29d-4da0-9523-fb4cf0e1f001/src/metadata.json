@@ -1,0 +1,6 @@
+{
+  "name": "AI Patch Validator",
+  "description": "Professional security analysis and patch validation tool with OSS VRP scope generation and OSV 1.7.5 alignment for elite bug hunters.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
