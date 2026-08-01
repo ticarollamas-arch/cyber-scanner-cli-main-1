@@ -1,0 +1,135 @@
+{
+  "theme": "dark",
+  "typography": {
+    "headings": {
+      "font": "IBM Plex Sans",
+      "classes": "font-sans tracking-tight leading-none font-bold"
+    },
+    "body": {
+      "font": "IBM Plex Sans",
+      "classes": "font-sans leading-relaxed"
+    },
+    "code_and_terminal": {
+      "font": "JetBrains Mono",
+      "classes": "font-mono tracking-tight"
+    },
+    "labels_and_numbers": {
+      "font": "JetBrains Mono",
+      "classes": "font-mono uppercase tracking-[0.1em]"
+    }
+  },
+  "colors": {
+    "palette_archetype": "RETRO-FUTURISM & HIGH-CONTRAST (Tactical Cybersecurity)",
+    "backgrounds": {
+      "base": "#0A0A0A",
+      "panel": "#111111",
+      "terminal": "#050505"
+    },
+    "accents": {
+      "primary_matrix_green": "#00FF41",
+      "secondary_cyan": "#00E5FF"
+    },
+    "severity": {
+      "P0_CRITICAL": {
+        "hex": "#FF3B30",
+        "tailwind": "text-red-500 bg-red-500/10 border-red-500/20 shadow-[0_0_10px_rgba(255,59,48,0.2)]"
+      },
+      "P1_HIGH": {
+        "hex": "#FFB800",
+        "tailwind": "text-amber-500 bg-amber-500/10 border-amber-500/20"
+      },
+      "P2_MEDIUM": {
+        "hex": "#007AFF",
+        "tailwind": "text-blue-500 bg-blue-500/10 border-blue-500/20"
+      },
+      "P3_LOW": {
+        "hex": "#8E8E93",
+        "tailwind": "text-slate-400 bg-slate-400/10 border-slate-400/20"
+      }
+    }
+  },
+  "layouts": {
+    "dashboard_grid": {
+      "type": "High Density Mode (SOC Panel)",
+      "classes": "grid grid-cols-1 md:grid-cols-4 gap-4",
+      "rules": "Every pixel utilized. Use h-full on children to stretch. Widgets should have solid 1px borders and no soft drop shadows. Border color should be subtle (border-white/10)."
+    },
+    "marketing_landing": {
+      "type": "The 'Tetris' Grid",
+      "classes": "grid grid-cols-1 md:grid-cols-12 gap-8",
+      "rules": "Asymmetrical layout. Leave breathing room. Use massive typography contrasting with small, precise technical details."
+    },
+    "surface_strategy": {
+      "cards": "Flat Solid backgrounds (no glassmorphism for data panels). 1px crisp borders. Sharp corners or max 4px radius (rounded-sm).",
+      "terminal": "Deepest black container (bg-[#050505]), inset shadow, glowing borders when active."
+    }
+  },
+  "components": {
+    "xterm_terminal": {
+      "instructions": "Use xterm.js package. Container must have p-4, bg-[#050505], overflow-hidden, and a blinking cursor. Font must map to JetBrains Mono.",
+      "styles": "border border-primary/30 shadow-[0_0_15px_rgba(0,255,65,0.1)] rounded-sm"
+    },
+    "severity_badges": {
+      "styles": "inline-flex items-center px-2 py-1 text-xs font-mono font-bold uppercase rounded-sm border"
+    },
+    "drag_drop_upload": {
+      "styles": "border-2 border-dashed border-white/20 bg-white/5 hover:border-primary/50 hover:bg-primary/5 transition-colors p-12 text-center rounded-sm",
+      "active_state": "border-primary bg-primary/10 shadow-[0_0_20px_rgba(0,255,65,0.2)]"
+    }
+  },
+  "visual_enhancers": {
+    "borders": "Use 'Tracing Beam' or glowing 1px lines for active/running scans.",
+    "textures": "Subtle CRT scanlines over the terminal or hero background (repeating-linear-gradient).",
+    "animations": {
+      "pulse": "Use animate-pulse for running scan indicators and CRITICAL severity dots.",
+      "typing": "Simulate typing for AI POC generation output."
+    }
+  },
+  "motion": {
+    "transitions": "Fast, precise, mechanical (0.15s ease-out). No slow floating animations. It should feel like a tactical terminal.",
+    "loaders": "Instead of spinners, use running binary codes, progress bars, or ASCII loaders."
+  },
+  "media_and_icons": {
+    "icon_library": "lucide-react (apply sharp/technical usage) or phosphor-icons if installed.",
+    "image_urls": {
+      "hero_background": {
+        "url": "https://images.unsplash.com/photo-1526374965328-7f61d4dc18c5",
+        "description": "Matrix movie still - use with heavy black overlay (bg-black/80) to allow text to pop."
+      },
+      "feature_terminal": {
+        "url": "https://images.pexels.com/photos/7325498/pexels-photo-7325498.jpeg",
+        "description": "Terminal screen with colorful code."
+      },
+      "feature_infrastructure": {
+        "url": "https://images.pexels.com/photos/36040448/pexels-photo-36040448.jpeg",
+        "description": "Data center neon tunnel for architecture/cloud integration section."
+      }
+    }
+  },
+  "3d_libraries_and_creative": {
+    "recommendation": "Use tsparticles for a digital mesh/node network background in the hero section to give an elite cybersecurity feel without bloating performance.",
+    "alternative": "ASCII art background rendering via basic React canvas."
+  },
+  "accessibility": {
+    "contrast": "Ensure pure white text on deep black backgrounds. Color is for accents and severity indicators only.",
+    "testing": "All interactive elements, buttons, terminal inputs, and upload zones MUST have data-testid attributes."
+  },
+  "instructions_to_main_agent": [
+    "Strictly follow the Dark Theme. No generic purple AI gradients. Use Matrix Green (#00FF41) or Crimson as highlights.",
+    "Do NOT use Space Grotesk. Use JetBrains Mono for all code, tables, numbers, and badges, and IBM Plex Sans for headings.",
+    "Ensure 'xterm.js' is properly installed and embedded for the web terminal tab.",
+    "Make the Dashboard dense like a SOC (Security Operations Center) panel. Use borders (border-collapse style) rather than floating cards.",
+    "Implement real-time scan progress visualization (pipeline stages).",
+    "Do NOT use pure transparent backgrounds for overlays, dialogs, or dropdowns. Use solid dark panel backgrounds (#111111) with 1px borders.",
+    "Write code using .js/.jsx (no TypeScript).",
+    "Add 'data-testid' to all critical interactive nodes (e.g., data-testid='upload-zip-btn', data-testid='terminal-container')."
+  ],
+  "universal_guidelines": [
+    "Prioritize optical alignment over geometric alignment.",
+    "Create depth through 1px sharp borders and inset shadows rather than large diffuse drop shadows.",
+    "Never use generic AI emojis (🤖🧠💭). Use technical icons.",
+    "Incorporate generous padding around text within bordered containers to prevent collision (p-6 or p-8).",
+    "Use standard modern button shapes (sharp corners or max 4px radius) with hover state contrast shifts.",
+    "Do not apply 'transition: all'. Explicitly animate transform, opacity, or background-color."
+  ]
+}
