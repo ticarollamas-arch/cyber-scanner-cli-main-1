@@ -1,0 +1,17 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: bad
+spec:
+  containers:
+  - name: bad
+    image: alpine
+    securityContext:
+      privileged: true
+    volumeMounts:
+    - name: dock
+      mountPath: /var/run/docker.sock
+  volumes:
+  - name: dock
+    hostPath:
+      path: /var/run/docker.sock
